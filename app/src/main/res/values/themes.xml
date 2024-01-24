@@ -4,7 +4,10 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
     </style>
 
-    <style name="Theme.Weather" parent="Base.Theme.Weather" />
+    <style name="Theme.Weather" parent="Base.Theme.Weather">
+    <item name="android:statusBarColor">#082271</item>
+    </style>
 </resources>
