@@ -8,24 +8,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class MainViewModel @Inject constructor(var weatherApi:WeatherAPI): ViewModel() {
 
     var weatherData = MutableLiveData<WeatherModel>()
+    var currentTime = MutableLiveData<String>()
 
     fun getWeatherDataFromAPI(cityName: String){
         weatherApi.getWeatheData(cityName).enqueue(object: Callback<WeatherModel>{
             override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
                 if (response.body() != null){
-                    val r = response.body()!!/*
-                    r.main.temp = r.main.temp.roundToInt().toDouble()
-                    r.main.tempMin = r.main.tempMin.roundToInt().toDouble()
-                    r.main.tempMax = r.main.tempMax.roundToInt().toDouble()*/
+                    val r = response.body()!!
                     val data = WeatherModel(r.base,r.clouds,r.cod,r.coord,r.dt,r.id,r.main,r.name,r.sys,r.timezone,r.visibility,r.weather,r.wind)
                     weatherData.value = data
+                    currentTime.value  = getCurrentTime()
                 }
             }
 
@@ -34,5 +34,13 @@ class MainViewModel @Inject constructor(var weatherApi:WeatherAPI): ViewModel() 
             }
 
         })
+    }
+
+    fun getCurrentTime(): String {
+        val currentTime = LocalTime.now()
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        val formattedTime = currentTime.format(formatter)
+
+        return formattedTime
     }
 }

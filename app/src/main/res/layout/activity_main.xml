@@ -13,6 +13,9 @@
         <variable
             name="city"
             type="String" />
+        <variable
+            name="updatedTime"
+            type="String" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,12 +30,50 @@
             android:layout_height="match_parent"
             android:padding="25dp">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="300dp"
+                android:layout_height="75dp"
+                android:backgroundTint="@android:color/transparent"
+                app:cardCornerRadius="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <EditText
+                    android:id="@+id/edtLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="56dp"
+                    android:background="@android:color/transparent"
+                    android:hint="City"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:text="@{city}"
+                    android:textColor="#ADD3F1"
+                    android:textColorHint="#ADD3F1"
+                    android:textSize="24sp" />
+
+                <ImageButton
+                    android:id="@+id/ivSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="10dp"
+                    app:srcCompat="@drawable/search"
+                    android:onClick="@{() -> mainActivity.onClickSearch(edtLocation.getText().toString())}"
+                    app:tint="#ADD3F1"
+                    android:background="@android:color/transparent"/>
+            </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/updated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Updated at"
+                android:text='@{"Updated at: " + updatedTime}'
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +94,7 @@
                 android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@{weatherModel.weather.get(0).description}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,12 +158,10 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewSunrise"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
                 app:layout_constraintBottom_toTopOf="@+id/cardViewPressure"
                 app:layout_constraintEnd_toStartOf="@+id/cardViewSunset"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -144,7 +183,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="Sunrise"
                     android:textSize="10sp" />
 
@@ -153,19 +192,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:text="@{String.valueOf(weatherModel.sys.sunrise)}"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{(mainActivity.convertUnixTimestampToDate(weatherModel.sys.sunrise)).substring(11, 16)}"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewSunset"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
                 app:layout_constraintBottom_toTopOf="@+id/cardViewHumidity"
                 app:layout_constraintEnd_toStartOf="@+id/cardViewWind"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -186,7 +223,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="Sunset"
                     android:textSize="10sp" />
 
@@ -195,19 +232,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:text="@{String.valueOf(weatherModel.sys.sunset)}"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{(mainActivity.convertUnixTimestampToDate(weatherModel.sys.sunset)).substring(11, 16)}"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewWind"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
                 app:layout_constraintBottom_toTopOf="@+id/cardViewInfo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -228,7 +263,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="Humidity"
                     android:textSize="10sp" />
 
@@ -237,19 +272,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:text="@{String.valueOf(weatherModel.main.humidity)}"
+                    android:layout_marginBottom="10dp"
+                    android:text='@{"%" + String.valueOf(weatherModel.main.humidity)}'
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewPressure"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/cardViewHumidity"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -271,7 +305,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="Pressure"
                     android:textSize="10sp" />
 
@@ -280,19 +314,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:text="@{String.valueOf(weatherModel.main.pressure)}"
+                    android:layout_marginBottom="10dp"
+                    android:text='@{String.valueOf(weatherModel.main.pressure) + " hPa"}'
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewHumidity"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/cardViewInfo"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -313,7 +346,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="Wind"
                     android:textSize="10sp" />
 
@@ -322,19 +355,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:text="@{String.valueOf(weatherModel.wind.speed)}"
+                    android:layout_marginBottom="10dp"
+                    android:text='@{String.valueOf(weatherModel.wind.speed) + " km/h"}'
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewInfo"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -355,7 +387,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="@{weatherModel.sys.country}"
                     android:textSize="10sp" />
 
@@ -364,7 +396,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="10dp"
                     android:text="@{weatherModel.name}"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
@@ -391,26 +423,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="300dp"
-                android:layout_height="75dp"
-                android:backgroundTint="@android:color/transparent"
-                app:cardCornerRadius="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:iconifiedByDefault="false"
-                    android:queryBackground="@android:color/transparent"
-                    android:queryHint="@{city}"
-                    app:iconTint="#048AF1" />
-            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
