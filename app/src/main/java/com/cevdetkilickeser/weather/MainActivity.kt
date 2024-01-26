@@ -77,13 +77,16 @@ class MainActivity : AppCompatActivity() {
 
     fun onClickSearch(city: String){
         hideKeyboard()
-        val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.apply {
-            putString("city",city)
-        }.apply()
-
-        mainViewModel.getWeatherDataFromAPI(city)
+        if (city.isNotEmpty()){
+            if(city.isNotEmpty()){
+                val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.apply {
+                    putString("city",city)
+                }.apply()
+                mainViewModel.getWeatherDataFromAPI(city)
+            }
+        }
     }
 
     fun loadData(){
@@ -103,7 +106,9 @@ class MainActivity : AppCompatActivity() {
         binding.edtLocation.setOnEditorActionListener { view, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH){
                 val city = view.text.toString()
-                onClickSearch(city)
+                if(city.isNotEmpty()){
+                    onClickSearch(city)
+                }
             }
             true
         }
