@@ -52,6 +52,20 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.currentTime.observe(this){
             binding.updatedTime = it
         }
+
+        mainViewModel.error.observe(this){
+            if (it){
+                binding.updated.visibility = View.GONE
+                binding.midData.visibility = View.GONE
+                binding.bottomData.visibility = View.GONE
+                binding.txtError.visibility = View.VISIBLE
+            }else{
+                binding.updated.visibility = View.VISIBLE
+                binding.midData.visibility = View.VISIBLE
+                binding.bottomData.visibility = View.VISIBLE
+                binding.txtError.visibility = View.GONE
+            }
+        }
     }
 
     private fun refresh(){
@@ -70,8 +84,6 @@ class MainActivity : AppCompatActivity() {
         }.apply()
 
         mainViewModel.getWeatherDataFromAPI(city)
-
-        Toast.makeText(this,"$city kaydedildi",Toast.LENGTH_SHORT).show()
     }
 
     fun loadData(){
