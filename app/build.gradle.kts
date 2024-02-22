@@ -9,6 +9,12 @@ android {
     namespace = "com.cevdetkilickeser.weather"
     compileSdk = 34
 
+    buildFeatures{
+        viewBinding = true
+        dataBinding = true
+    }
+
+
     defaultConfig {
         applicationId = "com.cevdetkilickeser.weather"
         minSdk = 26
@@ -27,10 +33,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-
-    buildFeatures{
-        dataBinding = true
     }
 
     compileOptions {
