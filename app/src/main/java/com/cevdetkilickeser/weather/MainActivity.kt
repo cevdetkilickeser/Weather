@@ -45,11 +45,11 @@ class MainActivity : AppCompatActivity() {
     private fun getLiveData() {
         mainViewModel.weatherData.observe(this){
             binding.weatherModel = it
-            Glide.with(this).load("https://api.openweathermap.org/img/w/${it.weather[0].icon}").into(binding.ivWeatherStatu)
+            Glide.with(this).load("https://api.openweathermap.org/img/w/${it.weather[0].icon}.png").into(binding.ivWeatherStatu)
         }
 
         mainViewModel.forecastData.observe(this){
-            forecastAdapter = ForecastAdapter(this,it.list)
+            forecastAdapter = ForecastAdapter(it.list)
             binding.forecastAdapter = forecastAdapter
         }
 
@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onClickEnter(){
-        binding.edtLocation.setOnEditorActionListener { view, actionId, keyEvent ->
+        binding.edtLocation.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH){
                 val city = view.text.toString()
                 if(city.isNotEmpty()){

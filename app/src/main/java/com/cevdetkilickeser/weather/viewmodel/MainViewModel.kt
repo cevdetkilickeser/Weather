@@ -28,7 +28,6 @@ class MainViewModel @Inject constructor(private var weatherApi:WeatherAPI): View
             override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
                 if (response.body() != null){
                     val data = response.body()!!
-                    //val data = WeatherModel(r.base,r.clouds,r.cod,r.coord,r.dt,r.id,r.main,r.name,r.sys,r.timezone,r.visibility,r.weather,r.wind)
                     weatherData.value = data
                     currentTime.value  = getCurrentTime()
                     error.value = false

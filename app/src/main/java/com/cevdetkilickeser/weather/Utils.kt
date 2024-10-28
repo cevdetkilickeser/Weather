@@ -4,7 +4,6 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 
 object TimestampToDayOfWeekConverter {
@@ -12,7 +11,7 @@ object TimestampToDayOfWeekConverter {
     @JvmStatic
     fun convert(timestamp: Long): String {
         val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
-        var day = dateTime.dayOfWeek.toString().substring(0,1) + dateTime.dayOfWeek.toString().substring(1,3).lowercase()
+        val day = dateTime.dayOfWeek.toString().substring(0,1) + dateTime.dayOfWeek.toString().substring(1,3).lowercase()
         return day
     }
 
