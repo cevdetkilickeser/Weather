@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.cevdetkilickeser.weather.adapter.ForecastAdapter
 import com.cevdetkilickeser.weather.databinding.ActivityMainBinding
 import com.cevdetkilickeser.weather.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var forecastAdapter: ForecastAdapter
     private lateinit var savedCity: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,22 +48,58 @@ class MainActivity : AppCompatActivity() {
             Glide.with(this).load("https://api.openweathermap.org/img/w/${it.weather[0].icon}").into(binding.ivWeatherStatu)
         }
 
+        mainViewModel.forecastData.observe(this){
+            forecastAdapter = ForecastAdapter(this,it.list)
+            binding.forecastAdapter = forecastAdapter
+        }
+
         mainViewModel.currentTime.observe(this){
             binding.updatedTime = it
         }
 
         mainViewModel.error.observe(this){
-            if (it){
-                binding.updated.visibility = View.GONE
-                binding.midData.visibility = View.GONE
-                binding.bottomData.visibility = View.GONE
-                binding.txtError.visibility = View.VISIBLE
-            }else{
-                binding.updated.visibility = View.VISIBLE
-                binding.midData.visibility = View.VISIBLE
-                binding.bottomData.visibility = View.VISIBLE
-                binding.txtError.visibility = View.GONE
-            }
+            throwError(it)
+        }
+    }
+
+    private fun throwError (error:Boolean){
+        if (error){
+            binding.updated.visibility = View.INVISIBLE
+            binding.status.visibility = View.INVISIBLE
+            binding.ivWeatherStatu.visibility = View.INVISIBLE
+            binding.temp.visibility = View.INVISIBLE
+            binding.minTemp.visibility = View.INVISIBLE
+            binding.textViewMinTemp.visibility = View.INVISIBLE
+            binding.maxTemp.visibility = View.INVISIBLE
+            binding.textViewMaxTemp.visibility = View.INVISIBLE
+            binding.sunrise.visibility = View.INVISIBLE
+            binding.sunset.visibility = View.INVISIBLE
+            binding.humidity.visibility = View.INVISIBLE
+            binding.pressure.visibility = View.INVISIBLE
+            binding.wind.visibility = View.INVISIBLE
+            binding.country.visibility = View.INVISIBLE
+            binding.city.visibility = View.INVISIBLE
+            binding.recyclerView.visibility = View.INVISIBLE
+            binding.txtError.visibility = View.VISIBLE
+        }
+        else{
+            binding.updated.visibility = View.VISIBLE
+            binding.status.visibility = View.VISIBLE
+            binding.ivWeatherStatu.visibility = View.VISIBLE
+            binding.temp.visibility = View.VISIBLE
+            binding.minTemp.visibility = View.VISIBLE
+            binding.textViewMinTemp.visibility = View.VISIBLE
+            binding.maxTemp.visibility = View.VISIBLE
+            binding.textViewMaxTemp.visibility = View.VISIBLE
+            binding.sunrise.visibility = View.VISIBLE
+            binding.sunset.visibility = View.VISIBLE
+            binding.humidity.visibility = View.VISIBLE
+            binding.pressure.visibility = View.VISIBLE
+            binding.wind.visibility = View.VISIBLE
+            binding.country.visibility = View.VISIBLE
+            binding.city.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.txtError.visibility = View.INVISIBLE
         }
     }
 
@@ -90,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         savedCity = sharedPreferences.getString("city","istanbul")!!
         mainViewModel.getWeatherDataFromAPI(savedCity)
-        binding.city = savedCity
+        binding.searchBoxCity = savedCity
     }
 
     private fun hideKeyboard() {

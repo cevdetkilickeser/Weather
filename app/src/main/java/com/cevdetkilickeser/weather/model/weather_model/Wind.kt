@@ -1,4 +1,4 @@
-package com.cevdetkilickeser.weather.model
+package com.cevdetkilickeser.weather.model.weather_model
 
 
 import com.google.gson.annotations.SerializedName

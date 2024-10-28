@@ -9,9 +9,12 @@
             type="com.cevdetkilickeser.weather.MainActivity" />
         <variable
             name="weatherModel"
-            type="com.cevdetkilickeser.weather.model.WeatherModel" />
+            type="com.cevdetkilickeser.weather.model.weather_model.WeatherModel" />
         <variable
-            name="city"
+            name="forecastAdapter"
+            type="com.cevdetkilickeser.weather.adapter.ForecastAdapter" />
+        <variable
+            name="searchBoxCity"
             type="String" />
         <variable
             name="updatedTime"
@@ -25,34 +28,18 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/txtError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Something went wrong..."
-                    android:textSize="20sp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/updated" />
-
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="300dp"
                     android:layout_height="75dp"
+                    android:layout_marginTop="64dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -67,7 +54,7 @@
                         android:hint="City"
                         android:imeOptions="actionSearch"
                         android:inputType="text"
-                        android:text="@{city}"
+                        android:text="@{searchBoxCity}"
                         android:textColor="@color/white"
                         android:textColorHint="#ADD3F1"
                         android:textSize="24sp" />
@@ -78,7 +65,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:background="@android:color/transparent"
-                        android:onClick="@{() -> mainActivity.onClickSearch(edtLocation.getText().toString())}"
+                        android:onClick="@{() -> mainActivity.onClickSearch(edtLocation.getText().toString().trim())}"
                         app:srcCompat="@drawable/search"
                         app:tint="#ADD3F1" />
                 </LinearLayout>
@@ -94,30 +81,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/midData"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="6">
-
                 <TextView
                     android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="64dp"
+                    android:layout_marginTop="16dp"
                     android:text="@{weatherModel.weather.get(0).description}"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/updated" />
 
                 <ImageView
                     android:id="@+id/ivWeatherStatu"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:layout_marginTop="8dp"
                     android:elevation="3dp"
                     android:scaleType="centerCrop"
@@ -132,71 +111,77 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text='@{String.valueOf(weatherModel.main.temp) + " °C"}'
-                    android:textSize="50dp"
+                    android:textSize="34sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ivWeatherStatu" />
 
                 <TextView
-                    android:id="@+id/temp_min"
+                    android:id="@+id/textViewMinTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Min Temp"
-                    app:layout_constraintEnd_toStartOf="@+id/temp_max"
+                    app:layout_constraintEnd_toStartOf="@+id/textViewMaxTemp"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/temp" />
 
                 <TextView
-                    android:id="@+id/temp_max"
+                    android:id="@+id/textViewMaxTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Max Temp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/temp_min"
+                    app:layout_constraintStart_toEndOf="@+id/textViewMinTemp"
                     app:layout_constraintTop_toBottomOf="@+id/temp" />
 
                 <TextView
-                    android:id="@+id/min"
+                    android:id="@+id/minTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text='@{String.valueOf(weatherModel.main.tempMin) + " °C"}'
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="@+id/temp_min"
-                    app:layout_constraintStart_toStartOf="@+id/temp_min"
-                    app:layout_constraintTop_toBottomOf="@+id/temp_min" />
+                    app:layout_constraintEnd_toEndOf="@+id/textViewMinTemp"
+                    app:layout_constraintStart_toStartOf="@+id/textViewMinTemp"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewMinTemp" />
 
                 <TextView
-                    android:id="@+id/max"
+                    android:id="@+id/maxTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text='@{String.valueOf(weatherModel.main.tempMax) + " °C"}'
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="@+id/temp_max"
-                    app:layout_constraintStart_toStartOf="@+id/temp_max"
-                    app:layout_constraintTop_toBottomOf="@+id/temp_max" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintEnd_toEndOf="@+id/textViewMaxTemp"
+                    app:layout_constraintStart_toStartOf="@+id/textViewMaxTemp"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewMaxTemp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bottomData"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="4">
+                <TextView
+                    android:id="@+id/txtError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Something went wrong..."
+                    android:textSize="20sp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toTopOf="@+id/progressBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout2"
-                    android:layout_width="100dp"
+                    android:layout_width="60dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="75dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/minTemp">
 
                     <TextView
                         android:id="@+id/textView7"
@@ -218,7 +203,7 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/textView13"
+                        android:id="@+id/sunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -228,15 +213,15 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout3"
-                    android:layout_width="100dp"
+                    android:layout_width="60dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="75dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout2"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/minTemp">
 
                     <TextView
                         android:id="@+id/textView8"
@@ -258,7 +243,7 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/textView14"
+                        android:id="@+id/sunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -268,15 +253,15 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout4"
-                    android:layout_width="100dp"
+                    android:layout_width="60dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="75dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout3"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/minTemp">
 
                     <TextView
                         android:id="@+id/textView9"
@@ -298,7 +283,7 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/textView15"
+                        android:id="@+id/humidity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -308,15 +293,15 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout5"
-                    android:layout_width="100dp"
+                    android:layout_width="60dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="75dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout6"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout4"
+                    app:layout_constraintTop_toBottomOf="@+id/minTemp">
 
                     <TextView
                         android:id="@+id/textView10"
@@ -338,25 +323,26 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/textView16"
+                        android:id="@+id/pressure"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text='@{String.valueOf(weatherModel.main.pressure) + " hPa"}'
+                        android:gravity="center"
+                        android:text='@{String.valueOf(weatherModel.main.pressure) + "\nhPa"}'
                         android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearLayout6"
-                    android:layout_width="100dp"
+                    android:layout_width="60dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="75dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout7"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout5"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+                    app:layout_constraintTop_toBottomOf="@+id/minTemp">
 
                     <TextView
                         android:id="@+id/textView11"
@@ -378,28 +364,29 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/textView17"
+                        android:id="@+id/wind"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text='@{String.valueOf(weatherModel.wind.speed) + " km/h"}'
+                        android:gravity="center"
+                        android:text='@{String.valueOf(weatherModel.wind.speed) + "\nkm/h"}'
                         android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearLayout7"
-                    android:layout_width="100dp"
+                    android:layout_width="60dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="75dp"
                     android:background="@drawable/linear_layout"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout6"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+                    app:layout_constraintTop_toBottomOf="@+id/minTemp">
 
                     <TextView
-                        android:id="@+id/textView12"
+                        android:id="@+id/country"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -418,15 +405,50 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/textView18"
+                        android:id="@+id/city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         android:text="@{weatherModel.name}"
                         android:textSize="10sp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:background="@drawable/linear_layout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/linearLayout7"
+                    app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="3dp"
+                        android:adapter="@{forecastAdapter}"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:indeterminateTint="#519DD6"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
