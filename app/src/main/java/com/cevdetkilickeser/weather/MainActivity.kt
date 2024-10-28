@@ -1,14 +1,12 @@
 package com.cevdetkilickeser.weather
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.cevdetkilickeser.weather.databinding.ActivityMainBinding
@@ -22,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var savedCity: String
-    private lateinit var currentTime: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun loadData(){
+    private fun loadData(){
         val sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE)
         savedCity = sharedPreferences.getString("city","istanbul")!!
         mainViewModel.getWeatherDataFromAPI(savedCity)
@@ -120,5 +117,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-
-//df567c20b44a0b4626a5402ce5fccc4b
